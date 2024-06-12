@@ -1,19 +1,55 @@
-// Update this page (the content is just a fallback if you fail and example)
-// Use chakra-ui
-import { Container, Text, VStack } from "@chakra-ui/react";
-
-// Example of using react-icons
-// import { FaRocket } from "react-icons/fa";
-// <IconButton aria-label="Add" icon={<FaRocket />} size="lg" />; // IconButton would also have to be imported from chakra
+import { Box, Heading, Input, Button, VStack, HStack, Checkbox, Text } from "@chakra-ui/react";
+import { useState } from "react";
 
 const Index = () => {
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState("");
+
+  const addTask = () => {
+    if (newTask.trim() === "") return;
+    setTasks([...tasks, { text: newTask, completed: false }]);
+    setNewTask("");
+  };
+
+  const toggleTaskCompletion = (index) => {
+    const updatedTasks = tasks.map((task, i) =>
+      i === index ? { ...task, completed: !task.completed } : task
+    );
+    setTasks(updatedTasks);
+  };
+
   return (
-    <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
+    <Box p={4}>
       <VStack spacing={4}>
-        <Text fontSize="2xl">Your Blank Canvas</Text>
-        <Text>Chat with the agent to start making edits.</Text>
+        <Heading mb={4}>Todo List</Heading>
+        <HStack>
+          <Input
+            placeholder="Add a new task"
+            value={newTask}
+            onChange={(e) => setNewTask(e.target.value)}
+          />
+          <Button onClick={addTask} colorScheme="teal">
+            Add Task
+          </Button>
+        </HStack>
+        <VStack spacing={2} align="stretch" w="100%">
+          {tasks.map((task, index) => (
+            <HStack key={index} spacing={4}>
+              <Checkbox
+                isChecked={task.completed}
+                onChange={() => toggleTaskCompletion(index)}
+              />
+              <Text
+                as={task.completed ? "s" : ""}
+                flex="1"
+              >
+                {task.text}
+              </Text>
+            </HStack>
+          ))}
+        </VStack>
       </VStack>
-    </Container>
+    </Box>
   );
 };
 
